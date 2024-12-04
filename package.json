@@ -1,0 +1,23 @@
+{
+  "name": "ai-world-press",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^3.2.2",
+    "@emotion/react": "^11.13.5",
+    "@emotion/styled": "^11.13.5",
+    "framer-motion": "^11.13.1",
+    "mongoose": "^8.8.3",
+    "next": "^15.0.2",
+    "node-fetch": "^3.3.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "xml2js": "^0.6.2"
+  }
+}
