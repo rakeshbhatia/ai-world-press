@@ -1,17 +1,19 @@
 // src/db/connectToMongo.js
-import { MongoClient } from 'mongodb';
 
-const mongoUri = 'mongodb://localhost:27017';
-const dbName = 'rssAppDB';
+import { MongoClient } from "mongodb";
 
-let cachedDb = null;
+const uri = process.env.MONGO_URI; // Add your MongoDB URI in an environment variable
+let client;
+let clientPromise;
 
-export async function connectToMongo() {
-    if (cachedDb) return cachedDb;
-
-    const client = new MongoClient(mongoUri);
-    await client.connect();
-    console.log('Connected to MongoDB');
-    cachedDb = client.db(dbName);
-    return cachedDb;
+if (!global._mongoClientPromise) {
+    client = new MongoClient(uri);
+    global._mongoClientPromise = client.connect();
 }
+
+clientPromise = global._mongoClientPromise;
+
+export const connectToMongo = async () => {
+    const connection = await clientPromise;
+    return connection.db(process.env.MONGO_DB_NAME); // Add DB name in environment variables
+};

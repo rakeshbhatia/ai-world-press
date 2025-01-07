@@ -1,66 +1,60 @@
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Link,
-  Image,
-  Skeleton,
-  Box
-} from '@chakra-ui/react'
-import useSWR from 'swr'
-import { fetchNews } from '../lib/rssParser'
+// src/components/NewsTable.js
 
-const fetcher = () => fetchNews()
+import { formatDistanceToNow } from 'date-fns';
 
-export default function NewsTable() {
-  const { data: articles, error } = useSWR('/api/news', fetcher, {
-    refreshInterval: 300000 // Refresh every 5 minutes
-  })
-
-  if (error) return <Box>Failed to load news</Box>
-  if (!articles) return <Skeleton height="400px" />
-
-  return (
-    <Table variant="simple">
-      <Thead>
-        <Tr>
-          <Th>Source</Th>
-          <Th>Featured Image</Th>
-          <Th>Headline</Th>
-          <Th>Author</Th>
-          <Th>Word Count</Th>
-          <Th>Published</Th>
-        </Tr>
-      </Thead>
-      <Tbody>
-        {articles.map((article, index) => (
-          <Tr key={index}>
-            <Td>{article.source}</Td>
-            <Td>
-              {article.image && (
-                <Image
-                  src={article.image.url}
-                  alt={article.title}
-                  maxW="100px"
-                  maxH="60px"
-                  objectFit="cover"
-                />
-              )}
-            </Td>
-            <Td>
-              <Link href={article.link} isExternal color="blue.500">
-                {article.title}
-              </Link>
-            </Td>
-            <Td>{article.author}</Td>
-            <Td>{article.wordCount || 'N/A'}</Td>
-            <Td>{new Date(article.pubDate).toLocaleDateString()}</Td>
-          </Tr>
-        ))}
-      </Tbody>
-    </Table>
-  )
+export default function NewsTable({ articles }) {
+    return (
+        <div className="overflow-hidden shadow-lg rounded-lg bg-white">
+            {/* Mobile view scrollable container */}
+            <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-100">
+                        <tr>
+                            <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                Source
+                            </th>
+                            <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                Title & Description
+                            </th>
+                            <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                Category
+                            </th>
+                            <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                Published
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                        {articles.map((article) => (
+                            <tr key={article._id} className="hover:bg-gray-50 transition-colors duration-200">
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="text-sm font-medium text-gray-900">
+                                        {article.newsOutlet}
+                                    </div>
+                                </td>
+                                <td className="px-6 py-4">
+                                    <div className="text-sm font-medium text-blue-600 hover:text-blue-800">
+                                        <a href={article.link} target="_blank" rel="noopener noreferrer">
+                                            {article.title}
+                                        </a>
+                                    </div>
+                                    <div className="text-sm text-gray-500 mt-1">
+                                        {article.description}
+                                    </div>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                    <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                        {article.category}
+                                    </span>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {formatDistanceToNow(new Date(article.pubDate), { addSuffix: true })}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
 }

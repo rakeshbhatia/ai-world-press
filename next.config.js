@@ -2,12 +2,15 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: [
-      'techcrunch.com',
-      'venturebeat.com',
-      'arstechnica.com',
-      'nytimes.com',
-      'technologyreview.com'
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'techcrunch.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'venturebeat.com',
+      },
     ],
   }
 }
